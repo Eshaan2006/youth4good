@@ -1,10 +1,12 @@
 // src/pages/SignUp.js
 import React, { useState } from 'react';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { FIREBASE_APP, FIREBASE_AUTH } from './data/FirebaseConfig';
+import { FIREBASE_APP, FIREBASE_AUTH } from '../data/FirebaseConfig';
 import { TextField, Button, Container, Typography, Box, Alert, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { setDoc, doc } from 'firebase/firestore';
-import { FIRESTORE_DB } from './data/FirebaseConfig';
+import { FIRESTORE_DB } from '../data/FirebaseConfig';
+
+
 
 const SignUp = () => {
   const [email, setEmail] = useState('');
