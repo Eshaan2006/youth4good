@@ -4,6 +4,7 @@ import { FIREBASE_AUTH } from '../data/FirebaseConfig';
 import { TextField, Button, Container, Typography, Box, Alert, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { setDoc, doc } from 'firebase/firestore';
 import { FIRESTORE_DB } from '../data/FirebaseConfig';
+import { useNavigate } from 'react-router-dom';
 
 const SignUp = () => {
   const [firstName, setFirstName] = useState('');  // State for first name
@@ -13,6 +14,8 @@ const SignUp = () => {
   const [role, setRole] = useState('Volunteer');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const navigate = useNavigate(); // Initialize useNavigate for navigation after login
+
 
   const handleSignUp = async (e) => {
     e.preventDefault();
@@ -106,7 +109,7 @@ const SignUp = () => {
           <Button
             variant="text"
             color="primary"
-            onClick={() => console.log("working")}
+            onClick={() => navigate('/login')}
             className="sign-up-link"
           >
             Already have an account? Login
