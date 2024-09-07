@@ -3,6 +3,7 @@ import Navbar from '../components/Navbar'; // Adjust path as needed
 import Boom from '../components/Boom';               // Adjust path as needed
 import About from '../components/About';             // Adjust path as needed
 import More from '../components/More';               // Adjust path as needed
+import Footer from '../components/Footer'; // Import the new footer component
 
 
 function Home() {
@@ -15,6 +16,7 @@ function Home() {
           <More />
         </div>
       </div>
+      <Footer />
     </div>
   );
 }
