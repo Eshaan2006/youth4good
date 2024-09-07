@@ -4,6 +4,7 @@ import { useAuth } from '../AuthProvider';
 import { getDoc, doc } from 'firebase/firestore';
 import { FIRESTORE_DB } from '../data/FirebaseConfig';
 import '../css/NavBar.css';
+import { FaInstagram, FaLinkedin, FaYoutube } from 'react-icons/fa'; // Import the icons
 
 const NavBar = () => {
   const { user, logout } = useAuth();
@@ -88,6 +89,18 @@ const NavBar = () => {
         ) : (
           <Link to="/signup" className="nav-link">Log In</Link>
         )}
+      </div>
+      {/* Social Media Icons */}
+      <div className="socialMediaIcons">
+        <a href="https://www.instagram.com/youth_4_good" target="_blank" rel="noopener noreferrer" className="socialIcon">
+          <FaInstagram size={24} />
+        </a>
+        <a href="https://www.linkedin.com/company/youth4good-non-profit/" target="_blank" rel="noopener noreferrer" className="socialIcon">
+          <FaLinkedin size={24} />
+        </a>
+        <a href="https://www.youtube.com/@youth4good" target="_blank" rel="noopener noreferrer" className="socialIcon">
+          <FaYoutube size={24} />
+        </a>
       </div>
     </nav>
   );

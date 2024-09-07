@@ -1,4 +1,5 @@
 import React from 'react';
+import { FaInstagram, FaLinkedin, FaYoutube } from 'react-icons/fa'; // Import the icons
 
 const Footer = () => {
   return (
@@ -11,6 +12,17 @@ const Footer = () => {
           <li><a href="/events" style={styles.footerLink}>Events</a></li>
           <li><a href="/signup" style={styles.footerLink}>Log In</a></li>
         </ul>
+        <div style={styles.socialMediaIcons}>
+        <a href="https://www.instagram.com/youth_4_good" target="_blank" rel="noopener noreferrer" className="socialIcon">
+          <FaInstagram size={24} />
+        </a>
+        <a href="https://www.linkedin.com/company/youth4good-non-profit/" target="_blank" rel="noopener noreferrer" className="socialIcon">
+          <FaLinkedin size={24} />
+        </a>
+        <a href="https://www.youtube.com/@youth4good" target="_blank" rel="noopener noreferrer" className="socialIcon">
+          <FaYoutube size={24} />
+          </a>
+        </div>
       </div>
     </footer>
   );
@@ -48,6 +60,14 @@ const styles = {
     textDecoration: 'none',
     margin: '0 15px',
     fontSize: '14px',
+    transition: 'color 0.3s ease',
+  },
+  socialMediaIcons: {
+    display: 'flex',
+    gap: '10px',
+  },
+  socialIcon: {
+    color: '#ecf0f1',
     transition: 'color 0.3s ease',
   },
 };
