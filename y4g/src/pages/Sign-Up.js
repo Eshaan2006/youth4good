@@ -36,58 +36,60 @@ const SignUp = () => {
   };
 
   return (
-    <Container maxWidth="xs">
-      <Box display="flex" flexDirection="column" alignItems="center" mt={8}>
-        <Typography variant="h4" gutterBottom>
-          Sign Up for Y4G
-        </Typography>
-        {error && <Alert severity="error">{error}</Alert>}
-        {success && <Alert severity="success">{success}</Alert>}
-        <form onSubmit={handleSignUp}>
-          <TextField
-            label="Email"
-            type="email"
-            fullWidth
-            margin="normal"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <TextField
-            label="Password"
-            type="password"
-            fullWidth
-            margin="normal"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          <FormControl fullWidth margin="normal">
-            <InputLabel>Role</InputLabel>
-            <Select
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
+    <div className="services">
+      <Container maxWidth="xs">
+        <Box display="flex" flexDirection="column" alignItems="center" mt={8}>
+          <Typography variant="h4" gutterBottom>
+            Sign Up for Y4G
+          </Typography>
+          {error && <Alert severity="error">{error}</Alert>}
+          {success && <Alert severity="success">{success}</Alert>}
+          <form onSubmit={handleSignUp}>
+            <TextField
+              label="Email"
+              type="email"
+              fullWidth
+              margin="normal"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
-            >
-              <MenuItem value="Volunteer">Volunteer</MenuItem>
-              <MenuItem value="Manager">Manager</MenuItem>
-              <MenuItem value="Executive">Executive</MenuItem>
-            </Select>
-          </FormControl>
-          <Button type="submit" variant="contained" color="primary" fullWidth>
-            Sign Up
+            />
+            <TextField
+              label="Password"
+              type="password"
+              fullWidth
+              margin="normal"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <FormControl fullWidth margin="normal">
+              <InputLabel>Role</InputLabel>
+              <Select
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+                required
+              >
+                <MenuItem value="Volunteer">Volunteer</MenuItem>
+                <MenuItem value="Manager">Manager</MenuItem>
+                <MenuItem value="Executive">Executive</MenuItem>
+              </Select>
+            </FormControl>
+            <Button type="submit" variant="contained" color="primary" fullWidth>
+              Sign Up
+            </Button>
+          </form>
+          <Button
+            variant="text"
+            color="primary"
+            onClick={() => console.log("working")}
+            sx={{ mt: 2 }}
+          >
+            Already have an account? Login
           </Button>
-        </form>
-        <Button
-          variant="text"
-          color="primary"
-          onClick={() => console.log("working")}
-          sx={{ mt: 2 }}
-        >
-          Already have an account? Login
-        </Button>
-      </Box>
-    </Container>
+        </Box>
+      </Container>
+    </div>
   );
 };
 
