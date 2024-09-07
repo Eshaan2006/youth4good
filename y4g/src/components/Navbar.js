@@ -10,7 +10,7 @@ const NavBar = () => {
         <li style={styles.navItem}><Link to="/" style={styles.navLink}>Home</Link></li>
         <li style={styles.navItem}><Link to="/events" style={styles.navLink}>Events</Link></li>
         <li style={styles.navItem}><Link to="/about" style={styles.navLink}>About</Link></li>
-        <li style={styles.navItem}><Link to="/sign-up" style={styles.navLink}>Log In</Link></li>
+        <li style={styles.navItem}><Link to="/signup" style={styles.navLink}>Log In</Link></li>
         {/* Add more links as needed */}
       </ul>
     </nav>

@@ -4,6 +4,7 @@ import Navbar from './components/Navbar'; // Import Navbar component
 import Events from './pages/Events'; // Import Events component
 import Home from './pages/Home'; // Import Home component (create this if you don't have it)
 import About from './pages/About'; // Import About component (create this if you don't have it)
+import Signup from './pages/Signup';
 import Services from './pages/Services.js'; // Import Services component (create this if you don't have it)
 import Contact from './pages/Contact'; // Import Contact component (create this if you don't have it)
 import './App.css'; // Import the CSS file for styling
@@ -18,6 +19,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/events" element={<Events />} />
             <Route path="/about" element={<About />} />
+            <Route path="/signup" element={<Signup />} />
             <Route path="/services" element={<Services />} />
             <Route path="/contact" element={<Contact />} />
           </Routes>

@@ -1,10 +1,10 @@
+// src/pages/SignUp.js
 import React, { useState } from 'react';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { FIREBASE_APP, FIREBASE_AUTH } from './data/FirebaseConfig';
 import { TextField, Button, Container, Typography, Box, Alert, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { setDoc, doc } from 'firebase/firestore';
 import { FIRESTORE_DB } from './data/FirebaseConfig';
-import './SignUp.css'; // Import the CSS file
 
 const SignUp = () => {
   const [email, setEmail] = useState('');
@@ -19,9 +19,11 @@ const SignUp = () => {
     setSuccess('');
 
     try {
+      // Create a new user with email and password
       const userCredential = await createUserWithEmailAndPassword(FIREBASE_AUTH, email, password);
       const user = userCredential.user;
 
+      // Store user role in Firestore
       await setDoc(doc(FIRESTORE_DB, 'users', user.uid), {
         email: user.email,
         role: role,
@@ -35,14 +37,14 @@ const SignUp = () => {
 
   return (
     <div className="sign-up">
-      <Container className="sign-up-container">
+      <Container maxWidth="xs">
         <Box display="flex" flexDirection="column" alignItems="center" mt={8}>
-          <Typography variant="h4" gutterBottom className="sign-up-header">
+          <Typography variant="h4" gutterBottom>
             Sign Up for Y4G
           </Typography>
           {error && <Alert severity="error">{error}</Alert>}
           {success && <Alert severity="success">{success}</Alert>}
-          <form onSubmit={handleSignUp} className="sign-up-form">
+          <form onSubmit={handleSignUp}>
             <TextField
               label="Email"
               type="email"
@@ -51,7 +53,6 @@ const SignUp = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="sign-up-field"
             />
             <TextField
               label="Password"
@@ -61,9 +62,8 @@ const SignUp = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="sign-up-field"
             />
-            <FormControl fullWidth margin="normal" className="sign-up-field">
+            <FormControl fullWidth margin="normal">
               <InputLabel>Role</InputLabel>
               <Select
                 value={role}
@@ -75,7 +75,7 @@ const SignUp = () => {
                 <MenuItem value="Executive">Executive</MenuItem>
               </Select>
             </FormControl>
-            <Button type="submit" variant="contained" color="primary" fullWidth className="sign-up-button">
+            <Button type="submit" variant="contained" color="primary" fullWidth>
               Sign Up
             </Button>
           </form>
@@ -83,7 +83,7 @@ const SignUp = () => {
             variant="text"
             color="primary"
             onClick={() => console.log("working")}
-            className="sign-up-link"
+            sx={{ mt: 2 }}
           >
             Already have an account? Login
           </Button>
