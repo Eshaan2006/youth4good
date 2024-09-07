@@ -11,13 +11,13 @@ const More = () => {
 
   const animationProps = useSpring({
     opacity: inView ? 1 : 0,
-    transform: inView ? 'translateY(0px)' : 'translateY(30px)',
+    transform: inView ? 'translateX(0px)' : 'translateX(50px)', // Slide in from the right
     config: { duration: 1000 },
   });
 
   return (
     <div className="section section-more" id="more">
-      <Container className="d-flex flex-column justify-content-center align-items-center text-center">
+      <Container className="d-flex justify-content-end text-right">
         <Row>
           <animated.div
             ref={ref}
@@ -27,7 +27,7 @@ const More = () => {
               backgroundColor: '#fff',
               borderRadius: '10px',
               boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-              maxWidth: '800px',
+              maxWidth: '600px',
             }}
           >
             <h2 className="more-title">More Information</h2>
