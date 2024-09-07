@@ -1,83 +1,119 @@
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom'; // Import useLocation to highlight active link
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom'; // Import Link from React Router for navigation
+import { useAuth } from '../AuthProvider'; // Import custom auth hook
 
 const NavBar = () => {
-  const location = useLocation();
+  const { user, logout } = useAuth(); // Get the current user and logout function from auth context
+  const [showConfirmLogout, setShowConfirmLogout] = useState(false); // State to manage the logout confirmation dialog
+
+  // Handle click on user's name
+  const handleUserNameClick = () => {
+    setShowConfirmLogout(true); // Show confirmation prompt
+  };
+
+  // Handle confirmation of logout
+  const handleLogoutConfirm = () => {
+    logout(); // Call logout function
+    setShowConfirmLogout(false); // Hide confirmation prompt
+  };
+
+  // Handle cancellation of logout
+  const handleLogoutCancel = () => {
+    setShowConfirmLogout(false); // Hide confirmation prompt
+  };
 
   return (
-    <nav style={styles.nav}>
+    <nav>
       <ul style={styles.navList}>
         <li style={styles.navItem}>
-          <Link
-            to="/"
-            style={location.pathname === "/" ? styles.navLinkActive : styles.navLink}
-          >
-            Home
-          </Link>
+          <Link to="/" style={styles.navLink}>Home</Link>
         </li>
         <li style={styles.navItem}>
-          <Link
-            to="/events"
-            style={location.pathname === "/events" ? styles.navLinkActive : styles.navLink}
-          >
-            Events
-          </Link>
+          <Link to="/events" style={styles.navLink}>Events</Link>
         </li>
         <li style={styles.navItem}>
-          <Link
-            to="/about"
-            style={location.pathname === "/about" ? styles.navLinkActive : styles.navLink}
-          >
-            About
-          </Link>
+          <Link to="/about" style={styles.navLink}>About</Link>
         </li>
-        <li style={styles.navItem}>
-          <Link
-            to="/signup"
-            style={location.pathname === "/signup" ? styles.navLinkActive : styles.navLink}
-          >
-            Log In
-          </Link>
-        </li>
+        
+        {/* Conditionally render the Log In link or User Name */}
+        {user ? (
+          <>
+            <li style={styles.navItem}>
+              {/* User's name is clickable and shows confirmation on click */}
+              <span 
+                style={{ ...styles.navLink, cursor: 'pointer' }} 
+                onClick={handleUserNameClick}
+              >
+                {user.displayName || user.email.split('@')[0]} {/* Display user's name or email */}
+              </span>
+            </li>
+          </>
+        ) : (
+          <li style={styles.navItem}>
+            <Link to="/signup" style={styles.navLink}>Log In</Link>
+          </li>
+        )}
       </ul>
+
+      {/* Logout confirmation dialog */}
+      {showConfirmLogout && (
+        <div style={styles.confirmDialog}>
+          <p>Are you sure you want to logout?</p>
+          <button onClick={handleLogoutConfirm} style={styles.confirmButton}>Yes</button>
+          <button onClick={handleLogoutCancel} style={styles.cancelButton}>No</button>
+        </div>
+      )}
     </nav>
   );
 };
 
-// Basic styles with rounded corners and hover effects
+// Basic styles
 const styles = {
-  nav: {
-    backgroundColor: '#2c3e50',
-    padding: '10px 20px',
-    boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
-    borderRadius: '8px',
-  },
   navList: {
     listStyleType: 'none',
     margin: 0,
     padding: 0,
     display: 'flex',
     justifyContent: 'space-around',
-    alignItems: 'center',
+    backgroundColor: '#333',
   },
   navItem: {
-    margin: '0 15px',
+    margin: 0,
   },
   navLink: {
-    color: '#ecf0f1',
+    color: 'white',
     textDecoration: 'none',
-    padding: '10px 20px',
-    borderRadius: '20px',
-    transition: 'background-color 0.3s ease, color 0.3s ease',
+    padding: '14px 20px',
+    display: 'block',
   },
   navLinkActive: {
-    color: '#2c3e50',
-    backgroundColor: '#ecf0f1',
-    padding: '10px 20px',
-    borderRadius: '20px',
+    backgroundColor: '#575757',
   },
-  navLinkHover: {
-    backgroundColor: '#34495e',
+  confirmDialog: {
+    position: 'absolute',
+    top: '50px',
+    right: '20px',
+    backgroundColor: 'white',
+    border: '1px solid #ddd',
+    padding: '10px',
+    borderRadius: '5px',
+    boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+    zIndex: 1000,
+  },
+  confirmButton: {
+    marginRight: '10px',
+    padding: '5px 10px',
+    backgroundColor: '#4CAF50',
+    color: 'white',
+    border: 'none',
+    cursor: 'pointer',
+  },
+  cancelButton: {
+    padding: '5px 10px',
+    backgroundColor: '#f44336',
+    color: 'white',
+    border: 'none',
+    cursor: 'pointer',
   },
 };
 
