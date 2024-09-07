@@ -1,15 +1,44 @@
-// src/pages/More.js
-
 import React from 'react';
-import '../css/More.css'; // Add specific styles for this component
+import { Container, Row } from 'reactstrap';
+import { useSpring, animated } from 'react-spring';
+import { useInView } from 'react-intersection-observer';
+import '../css/More.css'; // Ensure this file contains the necessary styles
 
 const More = () => {
+  const { ref, inView } = useInView({
+    triggerOnce: true, // Only trigger the animation once
+  });
+
+  const animationProps = useSpring({
+    opacity: inView ? 1 : 0,
+    transform: inView ? 'translateY(0px)' : 'translateY(30px)',
+    config: { duration: 1000 },
+  });
+
   return (
-    <div className="more">
-      <h2>More Information</h2>
-      <p>Find out more about our programs, events, and ways to get involved. This section can include links to detailed resources or other relevant information.</p>
+    <div className="section section-more" id="more">
+      <Container className="d-flex flex-column justify-content-center align-items-center text-center">
+        <Row>
+          <animated.div
+            ref={ref}
+            style={{
+              ...animationProps,
+              padding: '50px 20px',
+              backgroundColor: '#fff',
+              borderRadius: '10px',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+              maxWidth: '800px',
+            }}
+          >
+            <h2 className="more-title">More Information</h2>
+            <p className="more-description">
+              Find out more about our programs, events, and ways to get involved. This section can include links to detailed resources or other relevant information.
+            </p>
+          </animated.div>
+        </Row>
+      </Container>
     </div>
   );
-}
+};
 
 export default More;

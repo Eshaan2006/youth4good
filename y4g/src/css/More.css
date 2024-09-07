@@ -1,11 +1,39 @@
-/* src/pages/More.css */
+/* src/css/More.css */
 
-.more {
-    background-color: #ffffff; /* White */
-    padding: 20px;
-    margin: 10px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    text-align: center;
+.section-more {
+  padding: 60px 0;
+  background-color: #f9f9f9; /* Light background */
+}
+
+.more-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+  animation: fadeIn 1.5s ease-in-out;
+}
+
+.more-description {
+  font-size: 1.2rem;
+  color: #666;
+  line-height: 1.6;
+  max-width: 600px;
+  margin: 0;
+  animation: fadeIn 2s ease-in-out 1s;
+}
+
+/* Align the container to the right */
+.section-more .container {
+  display: flex;
+  justify-content: flex-end; /* Pushes content to the right */
+}
+
+/* Keyframes for fade-in effect */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
   }
-  
+  to {
+    opacity: 1;
+  }
+}
