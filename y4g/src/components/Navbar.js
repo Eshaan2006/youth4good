@@ -1,150 +1,96 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom'; // Import Link from React Router for navigation
-import { useAuth } from '../AuthProvider'; // Import custom auth hook
-import { getDoc, doc } from 'firebase/firestore'; // Import Firestore functions if necessary
-import { FIRESTORE_DB } from '../data/FirebaseConfig'; // Import Firestore configuration
+import { Link, NavLink } from 'react-router-dom';
+import { useAuth } from '../AuthProvider';
+import { getDoc, doc } from 'firebase/firestore';
+import { FIRESTORE_DB } from '../data/FirebaseConfig';
+import '../css/NavBar.css';
 
 const NavBar = () => {
-  const { user, logout } = useAuth(); // Get the current user and logout function from auth context
-  const [userName, setUserName] = useState(''); // State to manage user's display name
-  const [showConfirmLogout, setShowConfirmLogout] = useState(false); // State to manage the logout confirmation dialog
+  const { user, logout } = useAuth();
+  const [userName, setUserName] = useState('');
+  const [showDropdown, setShowDropdown] = useState(false);
 
-  // Fetch user's display name from Firestore if not available in `user`
   useEffect(() => {
     if (user) {
-      // Check if the user has a displayName
       if (user.displayName) {
         setUserName(user.displayName);
       } else {
-        // Fetch from Firestore if `displayName` is not set
         const fetchUserName = async () => {
           try {
             const userDocRef = doc(FIRESTORE_DB, 'users', user.uid);
             const userDocSnap = await getDoc(userDocRef);
             if (userDocSnap.exists()) {
               const userData = userDocSnap.data();
-              setUserName(userData.firstName); // Set the user's first name from Firestore
+              setUserName(userData.firstName);
             }
           } catch (error) {
             console.error('Error fetching user data from Firestore:', error);
           }
         };
-
         fetchUserName();
       }
     }
   }, [user]);
 
-  // Handle click on user's name
-  const handleUserNameClick = () => {
-    setShowConfirmLogout(true); // Show confirmation prompt
+  const handleDropdownToggle = () => {
+    setShowDropdown(!showDropdown);
   };
 
-  // Handle confirmation of logout
-  const handleLogoutConfirm = () => {
-    logout(); // Call logout function
-    setShowConfirmLogout(false); // Hide confirmation prompt
-  };
-
-  // Handle cancellation of logout
-  const handleLogoutCancel = () => {
-    setShowConfirmLogout(false); // Hide confirmation prompt
+  const handleLogout = () => {
+    logout();
+    setShowDropdown(false);
   };
 
   return (
-    <nav>
-      <ul style={styles.navList}>
-        <li style={styles.navItem}>
-          <Link to="/" style={styles.navLink}>Home</Link>
+    <nav className="navbar">
+      <div className="logo">
+        <Link to="/" className="logoText">
+          Youth4Good
+        </Link>
+      </div>
+      <ul className="nav-links">
+        <li>
+          <NavLink to="/" exact className="nav-link" activeClassName="active">Home</NavLink>
         </li>
-        <li style={styles.navItem}>
-          <Link to="/events" style={styles.navLink}>Events</Link>
+        <li>
+          <NavLink to="/events" className="nav-link" activeClassName="active">Events</NavLink>
         </li>
-        <li style={styles.navItem}>
-          <Link to="/about" style={styles.navLink}>About</Link>
+        <li>
+          <NavLink to="/about" className="nav-link" activeClassName="active">About</NavLink>
         </li>
-        
-        {/* Conditionally render the Log In link or User Name */}
-        {user ? (
-          <>
-            <li style={styles.navItem}>
-              {/* User's name is clickable and shows confirmation on click */}
-              <span 
-                style={{ ...styles.navLink, cursor: 'pointer' }} 
-                onClick={handleUserNameClick}
-              >
-                {/* Display user's name if available, otherwise use the first part of their email */}
-                {userName ? userName : user.email.split('@')[0]}
-              </span>
-            </li>
-          </>
-        ) : (
-          <li style={styles.navItem}>
-            <Link to="/signup" style={styles.navLink}>Log In</Link>
-          </li>
-        )}
+        <li>
+          <NavLink to="/tutor" className="nav-link" activeClassName="active">Tutoring</NavLink>
+        </li>
+        <li>
+          <NavLink to="/volunteer" className="nav-link" activeClassName="active">Volunteer</NavLink>
+        </li>
+        <li>
+          <NavLink to="/contact" className="nav-link" activeClassName="active">Contact</NavLink>
+        </li>
       </ul>
-
-      {/* Logout confirmation dialog */}
-      {showConfirmLogout && (
-        <div style={styles.confirmDialog}>
-          <p>Are you sure you want to logout?</p>
-          <button onClick={handleLogoutConfirm} style={styles.confirmButton}>Yes</button>
-          <button onClick={handleLogoutCancel} style={styles.cancelButton}>No</button>
-        </div>
-      )}
+      <div className="userSection">
+        {user ? (
+          <div className="dropdown">
+            <span 
+              className="nav-link" 
+              style={{ cursor: 'pointer' }} 
+              onClick={handleDropdownToggle}
+            >
+              {userName ? userName : user.email.split('@')[0]}
+            </span>
+            <ul className={`dropdownMenu ${showDropdown ? 'show' : ''}`}>
+              <li className="dropdownItem">
+                <Link to="/profile" className="dropdownLink">Profile</Link>
+              </li>
+              <li className="dropdownItem" onClick={handleLogout}>Logout</li>
+            </ul>
+          </div>
+        ) : (
+          <Link to="/signup" className="nav-link">Log In</Link>
+        )}
+      </div>
     </nav>
   );
-};
-
-// Basic styles
-const styles = {
-  navList: {
-    listStyleType: 'none',
-    margin: 0,
-    padding: 0,
-    display: 'flex',
-    justifyContent: 'space-around',
-    backgroundColor: '#333',
-  },
-  navItem: {
-    margin: 0,
-  },
-  navLink: {
-    color: 'white',
-    textDecoration: 'none',
-    padding: '14px 20px',
-    display: 'block',
-  },
-  navLinkActive: {
-    backgroundColor: '#575757',
-  },
-  confirmDialog: {
-    position: 'absolute',
-    top: '50px',
-    right: '20px',
-    backgroundColor: 'white',
-    border: '1px solid #ddd',
-    padding: '10px',
-    borderRadius: '5px',
-    boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-    zIndex: 1000,
-  },
-  confirmButton: {
-    marginRight: '10px',
-    padding: '5px 10px',
-    backgroundColor: '#4CAF50',
-    color: 'white',
-    border: 'none',
-    cursor: 'pointer',
-  },
-  cancelButton: {
-    padding: '5px 10px',
-    backgroundColor: '#f44336',
-    color: 'white',
-    border: 'none',
-    cursor: 'pointer',
-  },
 };
 
 export default NavBar;
