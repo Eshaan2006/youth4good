@@ -36,7 +36,7 @@ const SignUp = () => {
   };
 
   return (
-    <div className="services">
+    <div className="sign-up">
       <Container maxWidth="xs">
         <Box display="flex" flexDirection="column" alignItems="center" mt={8}>
           <Typography variant="h4" gutterBottom>
