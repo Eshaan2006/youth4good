@@ -1,11 +1,33 @@
-/* src/pages/Boom.css */
+/* src/css/Boom.css */
 
-.boom {
-    background-color: #e0f7fa; /* Light Blue */
-    padding: 20px;
-    margin: 10px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    text-align: center;
+.section-basic {
+  padding: 60px 0;
+  background: linear-gradient(135deg, #e0f7fa 0%, #b9fbc0 100%);
+}
+
+.boom-title {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 20px;
+  animation: fadeIn 2s ease-in-out;
+}
+
+.boom-description {
+  font-size: 1.2rem;
+  color: #666;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+  animation: fadeIn 2s ease-in-out 1s;
+}
+
+/* Keyframes for fade-in effect */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
   }
-  
+  to {
+    opacity: 1;
+  }
+}
