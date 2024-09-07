@@ -7,6 +7,8 @@ import About from './pages/About'; // Import About component (create this if you
 import Signup from './pages/Signup';
 import Services from './pages/Services.js'; // Import Services component (create this if you don't have it)
 import Contact from './pages/Contact'; // Import Contact component (create this if you don't have it)
+import Login from './pages/Login';
+import Chat from './pages/Chat';
 import './App.css'; // Import the CSS file for styling
 
 function App() {
@@ -20,7 +22,10 @@ function App() {
             <Route path="/events" element={<Events />} />
             <Route path="/about" element={<About />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/services" element={<Services />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/chat/:eventId" element={<Chat />} />
           </Routes>
         </main>
       </div>
