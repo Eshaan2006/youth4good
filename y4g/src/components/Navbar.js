@@ -1,10 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom'; // Import Link from React Router for navigation
 import { useAuth } from '../AuthProvider'; // Import custom auth hook
+import { getDoc, doc } from 'firebase/firestore'; // Import Firestore functions if necessary
+import { FIRESTORE_DB } from '../data/FirebaseConfig'; // Import Firestore configuration
 
 const NavBar = () => {
   const { user, logout } = useAuth(); // Get the current user and logout function from auth context
+  const [userName, setUserName] = useState(''); // State to manage user's display name
   const [showConfirmLogout, setShowConfirmLogout] = useState(false); // State to manage the logout confirmation dialog
+
+  // Fetch user's display name from Firestore if not available in `user`
+  useEffect(() => {
+    if (user) {
+      // Check if the user has a displayName
+      if (user.displayName) {
+        setUserName(user.displayName);
+      } else {
+        // Fetch from Firestore if `displayName` is not set
+        const fetchUserName = async () => {
+          try {
+            const userDocRef = doc(FIRESTORE_DB, 'users', user.uid);
+            const userDocSnap = await getDoc(userDocRef);
+            if (userDocSnap.exists()) {
+              const userData = userDocSnap.data();
+              setUserName(userData.firstName); // Set the user's first name from Firestore
+            }
+          } catch (error) {
+            console.error('Error fetching user data from Firestore:', error);
+          }
+        };
+
+        fetchUserName();
+      }
+    }
+  }, [user]);
 
   // Handle click on user's name
   const handleUserNameClick = () => {
@@ -44,7 +73,8 @@ const NavBar = () => {
                 style={{ ...styles.navLink, cursor: 'pointer' }} 
                 onClick={handleUserNameClick}
               >
-                {user.displayName || user.email.split('@')[0]} {/* Display user's name or email */}
+                {/* Display user's name if available, otherwise use the first part of their email */}
+                {userName ? userName : user.email.split('@')[0]}
               </span>
             </li>
           </>
