@@ -4,7 +4,7 @@ import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
-import { FIRESTORE_DB } from '../data/FirebaseConfig'; // Adjust the path if needed
+import { FIRESTORE_DB } from './FirebaseConfig'; // Adjust the path if needed
 
 const localizer = momentLocalizer(moment);
 
@@ -12,23 +12,26 @@ function Events() {
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
-    // Create a reference to the "events" collection
+    // Reference to the "events" collection in Firestore
     const eventsRef = collection(FIRESTORE_DB, 'events');
-    // Create a query to order events by date
+    // Query to order events by date in ascending order
     const eventsQuery = query(eventsRef, orderBy('date', 'asc'));
 
-    // Set up a real-time listener for the events collection
+    // Real-time listener for fetching events
     const unsubscribe = onSnapshot(eventsQuery, (snapshot) => {
-      const eventsData = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        title: doc.data().name,
-        start: new Date(doc.data().date.seconds * 1000),
-        end: new Date(doc.data().date.seconds * 1000 + 3600000) // 1 hour duration
-      }));
+      const eventsData = snapshot.docs.map((doc) => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          title: data.title,
+          start: data.date.toDate(), // Converts Firestore Timestamp to JS Date
+          end: new Date(data.date.toDate().getTime() + 3600000), // 1 hour duration
+        };
+      });
       setEvents(eventsData);
     });
 
-    // Clean up the subscription on unmount
+    // Cleanup function to unsubscribe from the listener when the component unmounts
     return () => unsubscribe();
   }, []);
 
