@@ -1,0 +1,50 @@
+/* src/pages/Home.css */
+
+.home {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f0f8ff; /* Light Blue */
+    color: #333; /* Dark Gray for text */
+    margin: 0;
+    padding: 0;
+  }
+  
+  .wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  .main {
+    flex: 1; /* To push the footer to the bottom */
+  }
+  
+  footer {
+    background-color: #ffffff; /* White */
+    padding: 20px;
+    text-align: center;
+    border-top: 1px solid #ddd; /* Light Gray */
+  }
+  
+  /* Styling for IndexNavbar, PageHeader, Boom, About, More, Signup */
+  
+  .IndexNavbar {
+    background-color: #ffffff; /* White */
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .PageHeader {
+    background-color: #e0f7fa; /* Light Blue */
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .Boom, .About, .More, .Signup {
+    background-color: #ffffff; /* White */
+    padding: 20px;
+    margin: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  
