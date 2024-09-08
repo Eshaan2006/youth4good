@@ -10,6 +10,9 @@ const Footer = () => {
           <li><a href="/" style={styles.footerLink}>Home</a></li>
           <li><a href="/about" style={styles.footerLink}>About</a></li>
           <li><a href="/events" style={styles.footerLink}>Events</a></li>
+          <li><a href="/tutor" style={styles.footerLink}>Tutoring</a></li>
+          <li><a href="/volunteer" style={styles.footerLink}>Volunteer</a></li>
+          <li><a href="/contact" style={styles.footerLink}>Contact</a></li>
           <li><a href="/signup" style={styles.footerLink}>Log In</a></li>
         </ul>
         <div style={styles.socialMediaIcons}>
