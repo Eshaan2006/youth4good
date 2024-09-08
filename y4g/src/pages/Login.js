@@ -56,7 +56,7 @@ const Login = () => {
         <Button
           variant="text"
           color="primary"
-          onClick={() => navigate('/sign-up')}
+          onClick={() => navigate('/signup')}
           sx={{ mt: 2 }}
         >
           Don't have an account? Sign Up
