@@ -50,6 +50,7 @@ function Events() {
           end: new Date(data.date.toDate().getTime() + 3600000), // 1 hour duration
           location: data.location,
           description: data.activities,
+          duration: data.duration,
           attendees: data.attendees || [], // Fetch attendees array
         };
       });
@@ -59,6 +60,7 @@ function Events() {
     // Cleanup function to unsubscribe from the listener when the component unmounts
     return () => unsubscribe();
   }, []);
+
 
   // Handle event click to open modal
   const handleSelectEvent = (event) => {
@@ -214,6 +216,9 @@ function Events() {
               <Typography variant="body1">
                 <strong>Description:</strong> {selectedEvent.description}
               </Typography>
+              <Typography variant="body1">
+                <strong>Duration:</strong> {selectedEvent.duration + ' hours'}
+              </Typography>
               <Button variant="outlined" onClick={handleToggleAttendees} sx={{ mt: 2 }}>
                 {showAttendees ? 'Hide Attendees' : 'List of Attendees'}
               </Button>
@@ -225,7 +230,7 @@ function Events() {
                       {attendees.map((attendee, index) => (
                         <ListItem key={attendee.uid}>
                           <ListItemText primary={attendee.name} />
-                          {(user.role === 'Manager' || user.role === 'Executive') ? (
+                          {user && (user.role === 'Manager' || user.role === 'Executive') ? ( // Ensure user is defined
                             <>
                               {!attendee.attended ? (
                                 <>
