@@ -1,10 +1,9 @@
-// src/pages/Events.js
 import React, { useEffect, useState } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { collection, query, orderBy, onSnapshot, doc, updateDoc, arrayUnion, getDoc } from 'firebase/firestore';
-import { FIRESTORE_DB } from '../data/FirebaseConfig'; // Adjust the path if needed
+import { FIRESTORE_DB } from '../data/FirebaseConfig';
 import {
   Dialog,
   DialogTitle,
@@ -16,9 +15,11 @@ import {
   ListItem,
   ListItemText,
   Box,
-} from '@mui/material'; // Import Material-UI components
-import { useAuth } from '../AuthProvider'; // Custom hook for user authentication
+} from '@mui/material';
+import { Check as CheckIcon } from '@mui/icons-material'; // Correct Import for Check Icon
+import { useAuth } from '../AuthProvider';
 import { useNavigate } from 'react-router-dom';
+import { Timestamp } from 'firebase/firestore';
 
 const localizer = momentLocalizer(moment);
 
@@ -102,11 +103,21 @@ function Events() {
 
         // Update Firestore to add the current user to the attendees list
         await updateDoc(eventRef, {
-          attendees: arrayUnion({ uid: user.uid, name: userName }), // Use fetched userName
+          attendees: arrayUnion({
+            name: userName,
+            uid: user.uid,
+            attended: false,
+            arrivalTime: null, // Initialize as null for editable timestamps
+            departTime: null,  // Initialize as null for editable timestamps
+            timeWorked: "0h 0m 0s", // Initialize time worked as 0
+          }),
         });
 
         // Update local state to reflect the change
-        setAttendees((prev) => [...prev, { uid: user.uid, name: userName }]);
+        setAttendees((prev) => [
+          ...prev,
+          { uid: user.uid, name: userName, attended: false, arrivalTime: null, departTime: null, timeWorked: "0h 0m 0s" },
+        ]);
         setIsUserJoined(true); // Set user joined state to true
       } else {
         console.error("User document does not exist in Firestore.");
@@ -121,12 +132,59 @@ function Events() {
     setShowAttendees(!showAttendees); // Toggle the visibility of the attendees list
   };
 
+  // Handle marking the attendee as arrived
+  const handleMarkArrived = async (index) => {
+    const currentTime = new Date(); // Capture the current time
+    const updatedAttendees = [...attendees];
+    updatedAttendees[index].attended = true; // Mark as attended
+    updatedAttendees[index].arrivalTime = Timestamp.fromDate(currentTime); // Set arrival time to current time
+
+    setAttendees(updatedAttendees); // Update state
+
+    // Update Firestore
+    if (selectedEvent) {
+      const eventRef = doc(FIRESTORE_DB, 'events', selectedEvent.id);
+      await updateDoc(eventRef, {
+        attendees: updatedAttendees,
+      });
+    }
+  };
+
+  // Handle marking the attendee as departed
+  const handleMarkDeparted = async (index) => {
+    const currentTime = new Date(); // Capture the current time
+    const updatedAttendees = [...attendees];
+    updatedAttendees[index].departTime = Timestamp.fromDate(currentTime); // Set departure time to current time
+
+    // Calculate time worked
+    const arrivalTime = updatedAttendees[index].arrivalTime.toDate();
+    const departTime = currentTime;
+    const timeDiffMs = departTime - arrivalTime; // Difference in milliseconds
+
+    const hours = Math.floor(timeDiffMs / (1000 * 60 * 60)); // Calculate hours
+    const minutes = Math.floor((timeDiffMs % (1000 * 60 * 60)) / (1000 * 60)); // Calculate minutes
+    const seconds = Math.floor((timeDiffMs % (1000 * 60)) / 1000); // Calculate seconds
+
+    const timeWorkedFormatted = `${hours}h ${minutes}m ${seconds}s`; // Format time worked
+    updatedAttendees[index].timeWorked = timeWorkedFormatted; // Store formatted time worked
+
+    setAttendees(updatedAttendees); // Update state
+
+    // Update Firestore
+    if (selectedEvent) {
+      const eventRef = doc(FIRESTORE_DB, 'events', selectedEvent.id);
+      await updateDoc(eventRef, {
+        attendees: updatedAttendees,
+      });
+    }
+  };
+
   // Placeholder function for "Chat with Other Volunteers"
   const handleChatWithVolunteers = () => {
-  if (selectedEvent) {
-    navigate(`/chat/${selectedEvent.id}`, { state: { eventTitle: selectedEvent.title } });
-  }
-};
+    if (selectedEvent) {
+      navigate(`/chat/${selectedEvent.id}`, { state: { eventTitle: selectedEvent.title } });
+    }
+  };
 
   return (
     <div>
@@ -162,11 +220,46 @@ function Events() {
               {showAttendees && (
                 <Box sx={{ maxHeight: 200, overflowY: 'auto', mt: 2 }}>
                   <Typography variant="h6">Attendees:</Typography>
-                  {attendees.length > 0 ? ( // Check if there are attendees
+                  {attendees.length > 0 ? (
                     <List>
-                      {attendees.map((attendee) => (
+                      {attendees.map((attendee, index) => (
                         <ListItem key={attendee.uid}>
                           <ListItemText primary={attendee.name} />
+                          {(user.role === 'Manager' || user.role === 'Executive') ? (
+                            <>
+                              {!attendee.attended ? (
+                                <>
+                                  <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={() => handleMarkArrived(index)}
+                                  >
+                                    Arrived
+                                  </Button>
+                                </>
+                              ) : (
+                                <>
+                                  {attendee.departTime ? (
+                                    <>
+                                      <CheckIcon color="success" /> {/* Show check icon if departed */}
+                                      <Typography variant="body2" sx={{ ml: 1 }}>
+                                        {attendee.timeWorked} {/* Display time worked */}
+                                      </Typography>
+                                    </>
+                                  ) : (
+                                    <Button
+                                      variant="contained"
+                                      color="error"
+                                      onClick={() => handleMarkDeparted(index)}
+                                    >
+                                      Departed
+                                    </Button>
+                                  )}
+                                </>
+                              )}
+                            </>
+                          ) : null // No additional text or input for non-managers
+                          }
                         </ListItem>
                       ))}
                     </List>
