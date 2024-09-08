@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { FIREBASE_AUTH } from '../data/FirebaseConfig';
-import { TextField, Button, Container, Typography, Box, Alert, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { TextField, Button, Container, Typography, Box, Alert } from '@mui/material';
 import { setDoc, doc } from 'firebase/firestore';
 import { FIRESTORE_DB } from '../data/FirebaseConfig';
 import { useNavigate } from 'react-router-dom';
@@ -11,11 +11,9 @@ const SignUp = () => {
   const [lastName, setLastName] = useState('');    // State for last name
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('Volunteer');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const navigate = useNavigate(); // Initialize useNavigate for navigation after login
-
 
   const handleSignUp = async (e) => {
     e.preventDefault();
@@ -26,15 +24,16 @@ const SignUp = () => {
       const userCredential = await createUserWithEmailAndPassword(FIREBASE_AUTH, email, password);
       const user = userCredential.user;
 
-      // Store user data including first and last name in Firestore
+      // Store user data including first and last name in Firestore with default role "Volunteer"
       await setDoc(doc(FIRESTORE_DB, 'users', user.uid), {
         firstName: firstName,
         lastName: lastName,
         email: user.email,
-        role: role,
+        role: 'Volunteer', // Automatically assign "Volunteer" role
       });
 
       setSuccess('Account created successfully! Redirecting to login...');
+      setTimeout(() => navigate('/login'), 3000); // Redirect to login after 3 seconds
     } catch (error) {
       setError(error.message);
     }
@@ -90,18 +89,6 @@ const SignUp = () => {
               required
               className="sign-up-field"
             />
-            <FormControl fullWidth margin="normal" className="sign-up-field">
-              <InputLabel>Role</InputLabel>
-              <Select
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-                required
-              >
-                <MenuItem value="Volunteer">Volunteer</MenuItem>
-                <MenuItem value="Manager">Manager</MenuItem>
-                <MenuItem value="Executive">Executive</MenuItem>
-              </Select>
-            </FormControl>
             <Button type="submit" variant="contained" color="primary" fullWidth className="sign-up-button">
               Sign Up
             </Button>
